@@ -1,28 +1,19 @@
 from graph import build_graph
+from cli_formatter import print_heading
 
 
 def main():
-    """
-    The entry point for our Deus Ex Machina.
-    This builds the agentic graph and runs it with a high-level goal.
-    """
     app = build_graph()
 
-    # Define a high-level goal for the agent
     goal = "Develop a simple python script to fetch the weather and then post a tweet about it."
 
-    # The input to the graph is a dictionary
-    inputs = {"goal": goal}
+    # --- LEVEL 6 UPGRADE: Initialize the state with an empty history ---
+    inputs = {"goal": goal, "history": []}
 
-    print("\n--- Running Agentic Workflow ---")
-    for output in app.stream(inputs, {"recursion_limit": 5}):
-        # The stream method lets us see the output of each node as it runs
-        for key, value in output.items():
-            print(f"Output from node '{key}':")
-            print("---")
-            print(value)
-        print("\n---\n")
-    print("--- Agentic Workflow Complete ---")
+    print_heading("--- Running Agentic Workflow ---")
+    final_state = app.invoke(inputs, {"recursion_limit": 15})
+    print_heading("--- Agentic Workflow Complete ---")
+    print("Final Result:", final_state.get('result'))
 
 
 if __name__ == "__main__":

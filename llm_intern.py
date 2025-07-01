@@ -1,9 +1,11 @@
-import os
-from dotenv import load_dotenv
+from langchain_chroma import Chroma # <-- Updated import
+from langchain_ollama import OllamaEmbeddings # <-- Updated import
+# Load environment variables from .env file
 from langchain_groq import ChatGroq
 
-# Load environment variables from .env file
+from dotenv  import load_dotenv
 load_dotenv()
+import os
 
 # --- CONFIGURE THE NEW GROQ CHAT MODEL ---
 try:
