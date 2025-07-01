@@ -1,12 +1,19 @@
 from langgraph.graph import StateGraph, END
 from typing import TypedDict, List
 from cognitive_core import cognitive_core_node
-from agent_teams import dev_team_node, social_media_team_node
+# --- Updated to import all our new specialist teams ---
+from agent_teams import (
+    researcher_team_node,
+    coder_team_node,
+    executor_team_node,
+    social_media_team_node,
+    finance_team_node
+)
 from config import VALID_TEAMS
 from memory_manager import save_memory
-from cli_formatter import print_info, print_heading, print_memory
-VALID_TEAMS = ["dev_team", "social_media_team"]
-# ... (VALID_TEAMS definition) ...
+from cli_formatter import print_info, print_heading
+
+
 
 class AgentState(TypedDict):
     goal: str
@@ -52,9 +59,13 @@ def build_graph():
     """Builds the agentic graph with the main execution loop."""
     workflow = StateGraph(AgentState)
 
+    # Add all our specialist nodes
     workflow.add_node("ceo", cognitive_core_node)
-    workflow.add_node("dev_team", dev_team_node)
+    workflow.add_node("researcher_team", researcher_team_node)
+    workflow.add_node("coder_team", coder_team_node)
+    workflow.add_node("executor_team", executor_team_node)
     workflow.add_node("social_media_team", social_media_team_node)
+    workflow.add_node("finance_team", finance_team_node)
     workflow.add_node("save_memory", save_memory_node)
 
     workflow.set_entry_point("ceo")
@@ -62,13 +73,15 @@ def build_graph():
     # This is the initial routing from the CEO's plan
     workflow.add_conditional_edges("ceo", router, {k: k for k in VALID_TEAMS} | {END: END})
 
-    # After a team acts, save the result to memory
-    workflow.add_edge("dev_team", "save_memory")
+    # --- THE FIX: Connect all our NEW teams to the memory node ---
+    # After a team acts, save the result to memory.
+    workflow.add_edge("researcher_team", "save_memory")
+    workflow.add_edge("coder_team", "save_memory")
+    workflow.add_edge("executor_team", "save_memory")
     workflow.add_edge("social_media_team", "save_memory")
+    workflow.add_edge("finance_team", "save_memory")
 
-    # --- THE FIX: After saving the memory, make another routing decision ---
-    # This creates the main loop, sending the flow back to the router
-    # to pick up the next task.
+    # After saving the memory, make another routing decision
     workflow.add_conditional_edges("save_memory", router, {k: k for k in VALID_TEAMS} | {END: END})
 
     app = workflow.compile()
