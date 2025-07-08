@@ -16,6 +16,8 @@ custom_theme = Theme({
 console = Console(theme=custom_theme)
 
 
+
+
 # We can create simple wrapper functions to make printing even easier
 def print_info(text):
     console.print(text, style="info")
@@ -39,6 +41,7 @@ def print_memory(text):
 
 def print_raw(text):
     console.print(f"📄 [RAW RESPONSE]:\n{text}", style="raw_response")
+
 
 
 def print_error(text):
