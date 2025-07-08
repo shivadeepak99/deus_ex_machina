@@ -3,6 +3,8 @@ from langchain_ollama import OllamaEmbeddings # <-- Updated import
 # Load environment variables from .env file
 from langchain_groq import ChatGroq
 
+
+
 from dotenv  import load_dotenv
 load_dotenv()
 import os
