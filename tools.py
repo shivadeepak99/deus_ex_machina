@@ -9,10 +9,8 @@ from playwright.sync_api import sync_playwright # <-- New Import
 
 WORKSPACE_DIR = "workspace"
 
-# Ensure the workspace directory exists
 os.makedirs(WORKSPACE_DIR, exist_ok=True)
 
-# --- LEVEL 6 UPGRADE: The System Info Tool ---
 def get_system_info() -> str:
     """A tool to get the current operating system."""
     return f"Operating System: {platform.system()}"
